@@ -72,7 +72,7 @@ public class Car {
             car.setDominationCount(cars);
         }
 
-        //map reduce code for calculating average price - using the slide 33 to implement the required logic
+        //map reduce code for calculating average price - using the slide 33 idea to implement the required logic
 
         double averagePrice = cars.stream()
                                     .map(car -> car.getPrice())
