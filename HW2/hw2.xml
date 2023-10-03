@@ -2,7 +2,7 @@
       ant -f hw2.xml
    on a shell.
 -->
-<project name="CalculatingVaccinationRate-ivy" basedir="." default="clean">
+<project name="CalculatingVaccinationRate" basedir="." default="clean">
     <property name="src" location="src" />
     <property name="bin" location="bin" />
 

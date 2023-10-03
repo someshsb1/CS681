@@ -1,8 +1,8 @@
 <!-- To run this build script, type:
-      ant -f hw1.xml
+      ant -f hw4.xml
    on a shell.
 -->
-<project name="Car" basedir="." default="clean">
+<project name="DistanceMetric" basedir="." default="clean">
     <property name="src" location="src" />
     <property name="bin" location="bin" />
 
@@ -19,17 +19,19 @@
         
         <javac srcdir="${src}" destdir="${bin}" includeAntRuntime="no">
             <classpath refid="classpath" />
-            <include name="edu/umb/cs681/hw1/*.java" />
+            <include name="edu/umb/cs681/distance/*.java" />
         </javac>
     </target>
 
     <target name="run" depends="compile">
-        <java classname="edu.umb.cs681.hw1.Car" classpathref="classpath" fork="true" />
+        <java classname="edu.umb.cs681.distance.Euclidean" classpathref="classpath" fork="true" />
+        <java classname="edu.umb.cs681.distance.Manhattan" classpathref="classpath" fork="true" />
+        <java classname="edu.umb.cs681.distance.Cosine" classpathref="classpath" fork="true" />
     </target>
 
     <target name="clean" depends="run">
         <delete includeemptydirs="true">
-            <fileset dir="${bin}/edu/umb/cs681/hw1" includes="**/*" />
+            <fileset dir="${bin}/edu/umb/cs681/distance" includes="**/*" />
         </delete>
     </target>
 

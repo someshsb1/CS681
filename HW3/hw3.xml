@@ -2,7 +2,7 @@
       ant -f hw3.xml
    on a shell.
 -->
-<project name="CalculatingVaccinationRate-ivy" basedir="." default="clean">
+<project name="Car" basedir="." default="clean">
     <property name="src" location="src" />
     <property name="bin" location="bin" />
 
