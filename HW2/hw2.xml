@@ -2,29 +2,21 @@
       ant -f hw2.xml
    on a shell.
 -->
-<project name="CalculatingVaccinationRate-ivy" basedir="." default="clean" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="CalculatingVaccinationRate-ivy" basedir="." default="clean">
     <property name="src" location="src" />
     <property name="bin" location="bin" />
-    <property name="ivy.lib" location="lib" />
 
     <path id="classpath">
         <pathelement location="${bin}" />
-        <fileset dir="${ivy.lib}" />
     </path>
 
     <target name="init">
         <mkdir dir="${bin}" />
-        <mkdir dir="test/reports" />
-        <mkdir dir="${ivy.lib}" />
         <echo message="CLASSPATH: ${toString:classpath}" />
     </target>
 
-    <target name="resolve" depends="init"
-        description="--> Download JAR files (listed in ivy.xml) to the 'lib' directory.">
-        <ivy:retrieve />
-    </target>
-
-    <target name="compile" depends="resolve">
+    <target name="compile" depends="init">
+        
         <javac srcdir="${src}" destdir="${bin}" includeAntRuntime="no">
             <classpath refid="classpath" />
             <include name="edu/umb/cs681/hw2/*.java" />
@@ -41,7 +33,4 @@
         </delete>
     </target>
 
-    <target name="clean-cache" description="--> clean the ivy cache (by default ~/.ivy2/cache)">
-        <ivy:cleancache />
-    </target>
 </project>

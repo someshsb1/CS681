@@ -1,5 +1,5 @@
 <!-- To run this build script, type:
-      ant -f hw1.xml
+      ant -f hw3.xml
    on a shell.
 -->
 <project name="CalculatingVaccinationRate-ivy" basedir="." default="clean">
@@ -19,17 +19,17 @@
         
         <javac srcdir="${src}" destdir="${bin}" includeAntRuntime="no">
             <classpath refid="classpath" />
-            <include name="edu/umb/cs681/hw1/*.java" />
+            <include name="edu/umb/cs681/hw3/*.java" />
         </javac>
     </target>
 
     <target name="run" depends="compile">
-        <java classname="edu.umb.cs681.hw1.Car" classpathref="classpath" fork="true" />
+        <java classname="edu.umb.cs681.hw3.Car" classpathref="classpath" fork="true" />
     </target>
 
     <target name="clean" depends="run">
         <delete includeemptydirs="true">
-            <fileset dir="${bin}/edu/umb/cs681/hw1" includes="**/*" />
+            <fileset dir="${bin}/edu/umb/cs681/hw3" includes="**/*" />
         </delete>
     </target>
 
