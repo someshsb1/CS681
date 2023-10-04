@@ -76,7 +76,7 @@ public class Car {
 
         double averagePrice = cars.stream()
                                     .map(car -> car.getPrice())
-                                    .reduce(new CarPriceResultHolder(), 
+                                    .reduce(new CarPriceResultHolder(), //class instance as result holder
                                     (result, price) -> {
                                                         result.setAverage((result.getAverage() * result.getNumCarExamined() + price) / (result.getNumCarExamined() + 1));
                                                         result.setNumCarExamined(result.getNumCarExamined() + 1);

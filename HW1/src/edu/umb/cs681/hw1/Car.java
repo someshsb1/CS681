@@ -78,8 +78,8 @@ public class Car {
         //seperating the cars to high and low groups based on their mileage
         Map<Boolean, List<Car>> grpMileage = sortByCarMileage.stream().collect(partitioningBy(car -> car.getMileage() >= mileageThreshold));
 
-        List<Car> grpMilHigh = grpMileage.get(true);
-        List<Car> grpMilLow = grpMileage.get(false);
+        List<Car> grpMilHigh = grpMileage.get(true); //greater than or equal to threshold
+        List<Car> grpMilLow = grpMileage.get(false); //less than the threshold
 
         //get average, highest, lowest values of high group
         OptionalDouble avgMileageHigh = grpMilHigh.stream().mapToInt(Car::getMileage).average();
@@ -118,8 +118,8 @@ public class Car {
         //seperating the cars to high and low groups based on their price
         Map<Boolean, List<Car>> grpPrice = sortByCarPrice.stream().collect(partitioningBy(car -> car.getPrice() >= priceThreshold));
 
-        List<Car> grpPriceHigh = grpPrice.get(true);
-        List<Car> grpPriceLow = grpPrice.get(false);
+        List<Car> grpPriceHigh = grpPrice.get(true); //greater than or equal to threshold
+        List<Car> grpPriceLow = grpPrice.get(false); //less than the threshold
 
         //get average, highest, lowest values of high group
         OptionalDouble avgPriceHigh = grpPriceHigh.stream().mapToDouble(Car::getPrice).average();
@@ -158,8 +158,8 @@ public class Car {
         //seperating the cars to high and low groups based on their year
         Map<Boolean, List<Car>> grpYear = sortByCarYear.stream().collect(partitioningBy(car -> car.getYear() >= yearThreshold));
 
-        List<Car> grpYearHigh = grpYear.get(true);
-        List<Car> grpYearLow = grpYear.get(false);
+        List<Car> grpYearHigh = grpYear.get(true); //greater than or equal to threshold
+        List<Car> grpYearLow = grpYear.get(false); //less than the threshold
 
         //get average, highest, lowest values of high group
         OptionalDouble avgYearHigh = grpYearHigh.stream().mapToInt(Car::getYear).average();
@@ -204,8 +204,8 @@ public class Car {
 
         Map<Boolean, List<Car>> grpDominationCount = sortByCardominationCounts.stream().collect(partitioningBy(car -> car.getDominationCounts() >= dominationCountsThreshold));
 
-        List<Car> grpdominationCountsHigh = grpDominationCount.get(true);
-        List<Car> grpdominationCountsLow = grpDominationCount.get(false);
+        List<Car> grpdominationCountsHigh = grpDominationCount.get(true); //greater than or equal to threshold
+        List<Car> grpdominationCountsLow = grpDominationCount.get(false); //less than the threshold
 
         //get average, highest, lowest values of high group
         OptionalDouble avgdominationCountsHigh = grpdominationCountsHigh.stream().mapToInt(Car::getDominationCounts).average();
