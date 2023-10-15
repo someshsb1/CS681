@@ -15,14 +15,32 @@ public class Manhattan implements DistanceMetric {
     public static void main(String argsp[]) {
         Manhattan manhattan = new Manhattan();
 
-        List<Double> p1 = new ArrayList<>();
-        List<Double> p2 = new ArrayList<>();
+        int points = 1001;
+        int dimensions = 101;
 
-        p1.add((double) 40);
-        p2.add((double) 10);
+        List<List<Double>> genPoints = generatePoints(points, dimensions);
+        List<List<Double>> distance = Distance.matrix(genPoints, manhattan);
 
-        double distance = manhattan.distance(p1, p2);
+        // List<Double> p1 = new ArrayList<>();
+        // List<Double> p2 = new ArrayList<>();
 
-        System.out.println("Manhattan Distance b/w p1 and p2 is :" + distance);
+        // p1.add((double) 40);
+        // p2.add((double) 10);
+
+        // double distance = manhattan.distance(p1, p2);
+
+        System.out.println("Manhattan Distance with 1000+ points that have 100+ dimensions :" + distance);
+    }
+    //helper method to generate random input for points and dimensions.
+    public static List<List<Double>> generatePoints(int points, int dimensions) {
+        List<List<Double>> p = new ArrayList<>();
+        for (int i = 0; i < points; i++) {
+            List<Double> p1 = new ArrayList<>();
+            for (int j = 0; j < dimensions; j++) {
+                p1.add(Math.random());
+            }
+            p.add(p1);
+        }
+        return p;
     }
 }

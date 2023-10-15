@@ -27,10 +27,11 @@ public class Distance {
 		List<List<Double>> distanceMatrix = Distance.initDistanceMatrix(numOfPoints);
 		IntStream.range(0, numOfPoints).forEach(i -> {
 			List<Double> current = points.get(i);
-			IntStream.range(0, numOfPoints).forEach(j -> {
+			IntStream.range(i, numOfPoints).forEach(j -> {
 				List<Double> peer = points.get(j);
 				double distance = metric.distance(current, peer);
 				distanceMatrix.get(i).set(j, distance);
+				distanceMatrix.get(j).set(i, distance);
 			});
 		});
 
