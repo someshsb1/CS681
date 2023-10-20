@@ -1,0 +1,19 @@
+﻿FID,OBJECTID_1,OBJECTID,PHONE,FAX,STREET,NEIGH,ZIP,SITE
+1,1,0,635-1410,635-5079,113 Paris St.,East Boston,2128,BCYF Paris Street Pool
+2,2,0,635-5169,635-5084,255 Medford St.,Charlestown,2129,BCYF Charlestown
+3,3,0,635-5129,635-5132,885 Washington St,Boston,2111,BCYF Quincy
+4,4,0,635-5100,635-5103,"200 ""D"" St.",South Boston,2127,BCYF Condon
+5,5,0,635-5162,635-5057,50 W. Brookline S,Boston,2118,BCYF Blackstone
+6,6,0,635-5206,635-5078,55 Malcolm X Blvd,Roxbury,2119,BCYF Madison Park Recreation Center
+7,7,0,635-5198,635-5020,200 Heath St.,Jamaica Plai,2130,BCYF Hennigan
+8,8,0,635-5144,635-5152,85 Olney St.,Dorchester,2121,BCYF Holland
+9,9,0,635-5146,635-5274,155 Talbot Ave.,Dorchester,2124,BCYF Perkins
+10,10,0,635-5150,635-5298,1 Worrell St.,Dorchester,2122,BCYF Leahy-Holloran
+11,11,0,635-1328,635-1332,5 Mildred Ave.,Mattapan,2126,BCYF Mildred Avenue
+12,12,0,635-5193,635-5273,20 South St.,Jamaica Plai,2130,BCYF Curtis Hall
+13,13,0,635-5181,635-1225,160 Florence St.,Roslindale,2131,BCYF Flaherty Pool
+14,14,0,635-5021,635-5628,5279 Washington S,West Roxbury,2132,BCYF Draper Pool
+15,15,0,635-1275,---,475 Commercial St,Boston,2113,BCYF Mirabella Pool
+16,16,0,635-5174,---,Bunker Hill St.,Charlestown,2129,BCYF Clougherty Pool
+17,17,0,635-5241,635-5627,159 Norfolk Ave.,Roxbury,2118,BCYF Mason Pool
+18,,,635-5104,,1663 Columbia Rd,South Boston,2127,Family Friendly Beach at BCYF Curley Center
