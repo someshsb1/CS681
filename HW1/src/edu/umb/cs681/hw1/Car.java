@@ -2,10 +2,12 @@ package edu.umb.cs681.hw1;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
@@ -82,31 +84,26 @@ public class Car {
         List<Car> grpMilLow = grpMileage.get(false); //less than the threshold
 
         //get average, highest, lowest values of high group
-        OptionalDouble avgMileageHigh = grpMilHigh.stream().mapToInt(Car::getMileage).average();
-        OptionalInt highMileageHigh = grpMilHigh.stream().mapToInt(Car::getMileage).max();
-        OptionalInt lowMileageHigh = grpMilHigh.stream().mapToInt(Car::getMileage).min();
+        DoubleSummaryStatistics stats1 = grpMilHigh.stream()
+                                        .collect(summarizingDouble(Car::getMileage));
 
-        //get average, highest, lowest values of low group
-        OptionalDouble avgMileageLow = grpMilLow.stream().mapToInt(Car::getMileage).average();
-        OptionalInt highMileageLow = grpMilLow.stream().mapToInt(Car::getMileage).max();
-        OptionalInt lowMileageLow = grpMilLow.stream().mapToInt(Car::getMileage).min();
-
-        //get the number of cars for both high and low groups
-        int mileageHighCount = grpMilHigh.size();
-        int mileageLowCount = grpMilLow.size();
+        //get average, highest, lowest, count values of low group
+        DoubleSummaryStatistics stats2 = grpMilLow.stream()
+                                        .mapToDouble(Car::getMileage)
+                                        .summaryStatistics();
 
         //printing the results of high and low group for car mileage
         System.out.println("High Car Mileage Group: ");
-        System.out.println("Average Mileage: " + avgMileageHigh);
-        System.out.println("High Mileage: " + highMileageHigh);
-        System.out.println("Low Mileage: " + lowMileageHigh);
-        System.out.println("Number of Cars: " + mileageHighCount);
+        System.out.println("Average Mileage: " + stats1.getAverage());
+        System.out.println("High Mileage: " + stats1.getMax());
+        System.out.println("Low Mileage: " + stats1.getMin());
+        System.out.println("Number of Cars: " + stats1.getCount());
 
         System.out.println("Low Car Mileage Group: ");
-        System.out.println("Average Mileage: " + avgMileageLow);
-        System.out.println("High Mileage: " + highMileageLow);
-        System.out.println("Low Mileage: " + lowMileageLow);
-        System.out.println("Number of Cars: " + mileageLowCount);
+        System.out.println("Average Mileage: " + stats2.getAverage());
+        System.out.println("High Mileage: " + stats2.getMax());
+        System.out.println("Low Mileage: " + stats2.getMin());
+        System.out.println("Number of Cars: " + stats2.getCount());
         System.out.println("");
 
         //setting the threshold for car price
@@ -122,31 +119,24 @@ public class Car {
         List<Car> grpPriceLow = grpPrice.get(false); //less than the threshold
 
         //get average, highest, lowest values of high group
-        OptionalDouble avgPriceHigh = grpPriceHigh.stream().mapToDouble(Car::getPrice).average();
-        OptionalDouble highPriceHigh = grpPriceHigh.stream().mapToDouble(Car::getPrice).max();
-        OptionalDouble lowPriceHigh = grpPriceHigh.stream().mapToDouble(Car::getPrice).min();
-
+        DoubleSummaryStatistics stats3 = grpPriceHigh.stream()
+                                        .collect(summarizingDouble(Car::getPrice));
         //get average, highest, lowest values of low group
-        OptionalDouble avgPriceLow = grpPriceLow.stream().mapToDouble(Car::getPrice).average();
-        OptionalDouble highPriceLow = grpPriceLow.stream().mapToDouble(Car::getPrice).max();
-        OptionalDouble lowPriceLow = grpPriceLow.stream().mapToDouble(Car::getPrice).min();
-
-        //get the number of cars for both high and low groups
-        int priceHighCount = grpPriceHigh.size();
-        int priceLowCount = grpPriceLow.size();
-
+        DoubleSummaryStatistics stats4 = grpPriceLow.stream()
+                                        .mapToDouble(Car::getPrice)
+                                        .summaryStatistics();
         //printing the results of high and low groups for car year
         System.out.println("High Car Price Group: ");
-        System.out.println("Average Price: " + avgPriceHigh);
-        System.out.println("High Price: " + highPriceHigh);
-        System.out.println("Low Price: " + lowPriceHigh);
-        System.out.println("Number of Cars: " + priceHighCount);
+        System.out.println("Average Price: " + stats3.getAverage());
+        System.out.println("High Price: " + stats3.getMax());
+        System.out.println("Low Price: " + stats3.getMin());
+        System.out.println("Number of Cars: " + stats3.getCount());
 
         System.out.println("Low Car Price Group: ");
-        System.out.println("Average Price: " + avgPriceLow);
-        System.out.println("High Price: " + highPriceLow);
-        System.out.println("Low Price: " + lowPriceLow);
-        System.out.println("Number of Cars: " + priceLowCount);
+        System.out.println("Average Price: " + stats4.getAverage());
+        System.out.println("High Price: " + stats4.getMax());
+        System.out.println("Low Price: " + stats4.getMin());
+        System.out.println("Number of Cars: " + stats4.getCount());
         System.out.println("");
 
         //setting the threshold for car year
@@ -154,7 +144,7 @@ public class Car {
 
         //sorting the cars by year in ascending order/default order
         List<Car> sortByCarYear = cars.stream().sorted(Comparator.comparingInt(Car::getYear)).collect(toList());
-        
+    
         //seperating the cars to high and low groups based on their year
         Map<Boolean, List<Car>> grpYear = sortByCarYear.stream().collect(partitioningBy(car -> car.getYear() >= yearThreshold));
 
@@ -162,31 +152,26 @@ public class Car {
         List<Car> grpYearLow = grpYear.get(false); //less than the threshold
 
         //get average, highest, lowest values of high group
-        OptionalDouble avgYearHigh = grpYearHigh.stream().mapToInt(Car::getYear).average();
-        OptionalInt highYearHigh = grpYearHigh.stream().mapToInt(Car::getYear).max();
-        OptionalInt lowYearHigh = grpYearHigh.stream().mapToInt(Car::getYear).min();
+        DoubleSummaryStatistics stats5 = grpYearHigh.stream()
+                                        .collect(summarizingDouble(Car::getYear));
 
         //get average, highest, lowest values of low group
-        OptionalDouble avgYearLow = grpYearLow.stream().mapToInt(Car::getYear).average();
-        OptionalInt highYearLow = grpYearLow.stream().mapToInt(Car::getYear).max();
-        OptionalInt lowYearLow = grpYearLow.stream().mapToInt(Car::getYear).min();
-
-        //get the number of cars for both high and low groups
-        int YearHighCount = grpYearHigh.size();
-        int YearLowCount = grpYearLow.size();
+        DoubleSummaryStatistics stats6 = grpYearLow.stream()
+                                        .mapToDouble(Car::getYear)
+                                        .summaryStatistics();
 
         //pringting the results of high and low year groups
         System.out.println("High Car Year Group: ");
-        System.out.println("Average Year: " + avgYearHigh);
-        System.out.println("High Year: " + highYearHigh);
-        System.out.println("Low Year: " + lowYearHigh);
-        System.out.println("Number of Cars: " + YearHighCount);
+        System.out.println("Average Year: " + stats5.getAverage());
+        System.out.println("High Year: " + stats5.getMax());
+        System.out.println("Low Year: " + stats5.getMin());
+        System.out.println("Number of Cars: " + stats5.getCount());
 
         System.out.println("Low Car Year Group: ");
-        System.out.println("Average Year: " + avgYearLow);
-        System.out.println("High Year: " + highYearLow);
-        System.out.println("Low Year: " + lowYearLow);
-        System.out.println("Number of Cars: " + YearLowCount);
+        System.out.println("Average Year: " + stats6.getAverage());
+        System.out.println("High Year: " + stats6.getMax());
+        System.out.println("Low Year: " + stats6.getMin());
+        System.out.println("Number of Cars: " + stats6.getCount());
         System.out.println("");
 
         //calculating the domination count for the car list above and fetching the same of high and low groups.
@@ -208,31 +193,25 @@ public class Car {
         List<Car> grpdominationCountsLow = grpDominationCount.get(false); //less than the threshold
 
         //get average, highest, lowest values of high group
-        OptionalDouble avgdominationCountsHigh = grpdominationCountsHigh.stream().mapToInt(Car::getDominationCounts).average();
-        OptionalInt highdominationCountsHigh = grpdominationCountsHigh.stream().mapToInt(Car::getDominationCounts).max();
-        OptionalInt lowdominationCountsHigh = grpdominationCountsHigh.stream().mapToInt(Car::getDominationCounts).min();
+        DoubleSummaryStatistics stats7 = grpdominationCountsHigh.stream()
+                                        .collect(summarizingDouble(Car::getDominationCounts));
 
         //get average, highest, lowest values of low group
-        OptionalDouble avgdominationCountsLow = grpdominationCountsLow.stream().mapToInt(Car::getDominationCounts).average();
-        OptionalInt highdominationCountsLow = grpdominationCountsLow.stream().mapToInt(Car::getDominationCounts).max();
-        OptionalInt lowdominationCountsLow = grpdominationCountsLow.stream().mapToInt(Car::getDominationCounts).min();
-
-        //get the number of cars for both high and low groups
-        int dominationCountsHighCount = grpdominationCountsHigh.size();
-        int dominationCountsLowCount = grpdominationCountsLow.size();
-
+        DoubleSummaryStatistics stats8 = grpdominationCountsLow.stream()
+                                        .mapToDouble(Car::getDominationCounts)
+                                        .summaryStatistics();
         //printing the results of high and low domination groups
         System.out.println("High Car dominationCounts Group: ");
-        System.out.println("Average dominationCounts: " + avgdominationCountsHigh);
-        System.out.println("High dominationCounts: " + highdominationCountsHigh);
-        System.out.println("Low dominationCounts: " + lowdominationCountsHigh);
-        System.out.println("Number of Cars: " + dominationCountsHighCount);
+        System.out.println("Average dominationCounts: " + stats7.getAverage());
+        System.out.println("High dominationCounts: " + stats7.getMax());
+        System.out.println("Low dominationCounts: " + stats7.getMin());
+        System.out.println("Number of Cars: " + stats7.getCount());
 
         System.out.println("Low Car dominationCounts Group: ");
-        System.out.println("Average dominationCounts: " + avgdominationCountsLow);
-        System.out.println("High dominationCounts: " + highdominationCountsLow);
-        System.out.println("Low dominationCounts: " + lowdominationCountsLow);
-        System.out.println("Number of Cars: " + dominationCountsLowCount);
+        System.out.println("Average dominationCounts: " + stats8.getAverage());
+        System.out.println("High dominationCounts: " + stats8.getMax());
+        System.out.println("Low dominationCounts: " + stats8.getMin());
+        System.out.println("Number of Cars: " + stats8.getCount());
 
     }
 }
