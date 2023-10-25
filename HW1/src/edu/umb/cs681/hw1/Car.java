@@ -6,9 +6,6 @@ import java.util.DoubleSummaryStatistics;
 import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
-import java.util.OptionalDouble;
-import java.util.OptionalInt;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
@@ -145,7 +142,7 @@ public class Car {
 
         //sorting the cars by year in ascending order/default order
         List<Car> sortByCarYear = cars.stream().sorted(Comparator.comparingInt(Car::getYear)).collect(toList());
-    
+
         //seperating the cars to high and low groups based on their year
         Map<Boolean, List<Car>> grpYear = sortByCarYear.stream().collect(partitioningBy(car -> car.getYear() >= yearThreshold));
 
