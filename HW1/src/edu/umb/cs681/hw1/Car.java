@@ -3,6 +3,7 @@ package edu.umb.cs681.hw1;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.DoubleSummaryStatistics;
+import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
@@ -75,7 +76,7 @@ public class Car {
         int mileageThreshold = 2100;
 
         //sorting the cars by mileage in ascending order/default order
-        List<Car> sortByCarMileage = cars.stream().sorted(Comparator.comparingInt(Car::getMileage)).collect(toList());
+        List<Car> sortByCarMileage = cars.stream().sorted(Comparator.comparingDouble(Car::getMileage)).collect(toList());
 
         //seperating the cars to high and low groups based on their mileage
         Map<Boolean, List<Car>> grpMileage = sortByCarMileage.stream().collect(partitioningBy(car -> car.getMileage() >= mileageThreshold));
@@ -152,12 +153,12 @@ public class Car {
         List<Car> grpYearLow = grpYear.get(false); //less than the threshold
 
         //get average, highest, lowest values of high group
-        DoubleSummaryStatistics stats5 = grpYearHigh.stream()
-                                        .collect(summarizingDouble(Car::getYear));
+        IntSummaryStatistics stats5 = grpYearHigh.stream()
+                                        .collect(summarizingInt(Car::getYear));
 
         //get average, highest, lowest values of low group
-        DoubleSummaryStatistics stats6 = grpYearLow.stream()
-                                        .mapToDouble(Car::getYear)
+        IntSummaryStatistics stats6 = grpYearLow.stream()
+                                        .mapToInt(Car::getYear)
                                         .summaryStatistics();
 
         //pringting the results of high and low year groups
@@ -193,12 +194,12 @@ public class Car {
         List<Car> grpdominationCountsLow = grpDominationCount.get(false); //less than the threshold
 
         //get average, highest, lowest values of high group
-        DoubleSummaryStatistics stats7 = grpdominationCountsHigh.stream()
-                                        .collect(summarizingDouble(Car::getDominationCounts));
+        IntSummaryStatistics stats7 = grpdominationCountsHigh.stream()
+                                        .collect(summarizingInt(Car::getDominationCounts));
 
         //get average, highest, lowest values of low group
-        DoubleSummaryStatistics stats8 = grpdominationCountsLow.stream()
-                                        .mapToDouble(Car::getDominationCounts)
+        IntSummaryStatistics stats8 = grpdominationCountsLow.stream()
+                                        .mapToInt(Car::getDominationCounts)
                                         .summaryStatistics();
         //printing the results of high and low domination groups
         System.out.println("High Car dominationCounts Group: ");
