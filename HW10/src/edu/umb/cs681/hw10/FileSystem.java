@@ -30,11 +30,21 @@ public class FileSystem {
     }
 
     public LinkedList<Directory> getRootDirs() {
-        return rootDirs;
+        lock.lock();
+        try {
+            return rootDirs;
+        } finally {
+            lock.unlock();
+        }
     }
 
     public void appendRootDir(Directory prjRoot) {
-        rootDirs.add(prjRoot);
+        lock.lock();
+        try {
+            rootDirs.add(prjRoot);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public void setAtomicFlag() {

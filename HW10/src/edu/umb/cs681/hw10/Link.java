@@ -13,14 +13,29 @@ public class Link extends FSElement {
     }
 
     public void setTarget(FSElement target) {
+        lock.lock();
+        try {
             this.target = target;
+        } finally {
+                lock.unlock();
+        }
     }
 
     public FSElement getTarget() {
+        lock.lock();
+        try {
             return target;
+        } finally {
+                lock.unlock();
+        }
     }
 
     public boolean isLink() {
+        lock.lock();
+        try {
             return true;
+        } finally {
+                lock.unlock();
+        }
     }
 }

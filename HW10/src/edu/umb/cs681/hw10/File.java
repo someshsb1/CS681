@@ -13,7 +13,12 @@ public class File extends FSElement {
     }
 
     public boolean isFile() {
-        return true;
+        lock.lock();
+        try {
+            return true;
+        } finally {
+            lock.unlock();
+        }
     }
     
 }

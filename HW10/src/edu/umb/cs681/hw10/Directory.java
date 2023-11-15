@@ -25,15 +25,27 @@ public class Directory extends FSElement{
     }
 
     public Directory getDirectory() {
-        return parent;
+        lock.lock();
+        try {
+            return parent;
+        } finally {
+            lock.unlock();
+        }
     }
 
     public void setName(String name) {
+        lock.lock();
         this.name = name;
+        lock.unlock();
     }
 
     public String getName() {
-        return name;
+        lock.lock();
+        try {
+            return name;
+        } finally {
+            lock.unlock();
+        }
     }
 
     public LinkedList<FSElement> getChildrens() {
@@ -64,7 +76,12 @@ public class Directory extends FSElement{
     }
 
     public boolean isDirectory() {
-        return true;
+        lock.lock();
+        try {
+            return true;
+        } finally {
+            lock.unlock();
+        }
     }
 
     public LinkedList<Directory> getSubDirectories() {
