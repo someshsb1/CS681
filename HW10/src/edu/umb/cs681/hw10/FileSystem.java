@@ -47,10 +47,6 @@ public class FileSystem {
         }
     }
 
-    public void setAtomicFlag() {
-        done.set(true);
-    }
-
     public static void main(String args[]) throws InterruptedException {
         Runnable run = () -> {
             AtomicReference<FileSystem> fs = FileSystem.getFileSystem(); //only one instance is created using AtomicReference
