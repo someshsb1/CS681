@@ -36,7 +36,9 @@ public class FileSystem {
     }
 
     public void appendRootDir(Directory prjRoot) {
+        lock.lock();
         rootDirs.add(prjRoot);
+        lock.unlock();
     }
 
     public List<File> getSharedList() {
@@ -48,10 +50,13 @@ public class FileSystem {
         }
     }
 
+    public void setDone() {
+        done = true;
+    }
     public static void main(String args[]) {
 
         FileSystem fs = new FileSystem();
-        List<File> IdentifiedFilesSharedList = fs.getSharedList();
+        List<File> identifiedFilesSharedList = fs.getSharedList();
 
         //Drive 1
         Directory Applications = new Directory(null, "Applications", 0, LocalDateTime.now(), null);
@@ -107,21 +112,31 @@ public class FileSystem {
         Shared.appendChild(Charts);
         Shared.appendChild(Img);
 
+        //Drive 5
+        Directory newFolder = new Directory(null, "NewFolder", 0, LocalDateTime.now(), null);
+        Link newFile = new Link(newFolder, "newFile", 0, LocalDateTime.now(), null);
+
+        newFolder.appendChild(newFile);
+
+        //append all root directories.
         fs.appendRootDir(Applications);
         fs.appendRootDir(Home);
         fs.appendRootDir(Downloads);
         fs.appendRootDir(Macintosh);
+        fs.appendRootDir(newFolder);
 
+        //placing FileCrawlingVisitor instances in ThreadLocal
         ThreadLocal<FileCrawlingVisitor> ThreadsVisitor1 = ThreadLocal.withInitial(FileCrawlingVisitor::new);
         ThreadLocal<FileCrawlingVisitor> ThreadsVisitor2 = ThreadLocal.withInitial(FileCrawlingVisitor::new);
         ThreadLocal<FileCrawlingVisitor> ThreadsVisitor3 = ThreadLocal.withInitial(FileCrawlingVisitor::new);
         ThreadLocal<FileCrawlingVisitor> ThreadsVisitor4 = ThreadLocal.withInitial(FileCrawlingVisitor::new);
+        ThreadLocal<FileCrawlingVisitor> ThreadsVisitor5 = ThreadLocal.withInitial(FileCrawlingVisitor::new);
 
         Thread crawlingThread1 = new Thread(() -> {
             FileCrawlingVisitor visitDrive1 = ThreadsVisitor1.get();
             while(!fs.done) {
             Applications.accept(visitDrive1);
-            IdentifiedFilesSharedList.addAll(visitDrive1.getFiles());
+            identifiedFilesSharedList.addAll(visitDrive1.getFiles()); //adding identified files to the shared list.
 
             System.out.println("Applications Directory Crawling: " + visitDrive1.getFiles());
             }
@@ -132,7 +147,7 @@ public class FileSystem {
             FileCrawlingVisitor visitDrive2 = ThreadsVisitor2.get();
             while(!fs.done) {
             Home.accept(visitDrive2);
-            IdentifiedFilesSharedList.addAll(visitDrive2.getFiles());
+            identifiedFilesSharedList.addAll(visitDrive2.getFiles());
 
             System.out.println("Home Directory Crawling: " + visitDrive2.getFiles());
             }
@@ -143,7 +158,7 @@ public class FileSystem {
             FileCrawlingVisitor visitDrive3 = ThreadsVisitor3.get();
             while(!fs.done) {
             Downloads.accept(visitDrive3);
-            IdentifiedFilesSharedList.addAll(visitDrive3.getFiles());
+            identifiedFilesSharedList.addAll(visitDrive3.getFiles());
 
             System.out.println("Downloads Directory Crawling: " + visitDrive3.getFiles());
         }
@@ -155,15 +170,26 @@ public class FileSystem {
             // System.out.println("xxxxxx");
             while(!fs.done) {
             Macintosh.accept(visitDrive4);
-            IdentifiedFilesSharedList.addAll(visitDrive4.getFiles());
+            identifiedFilesSharedList.addAll(visitDrive4.getFiles());
 
-            System.out.println("Documents Directory Crawling: " + visitDrive4.getFiles());
+            System.out.println("Macintosh Directory Crawling: " + visitDrive4.getFiles());
             }
         });
         crawlingThread4.start();
 
+        Thread crawlingThread5 = new Thread(() -> {
+            FileCrawlingVisitor visitDrive5 = ThreadsVisitor5.get();
+            while(!fs.done) {
+                newFolder.accept(visitDrive5);
+                identifiedFilesSharedList.addAll(visitDrive5.getFiles());
+
+                System.out.println("newFolder Directory Crawling: " + visitDrive5.getFiles());
+            }
+        });
+        crawlingThread5.start();
+
         //2 step thread termination, setting done to true
-        fs.done=true;
+        fs.setDone();
 
         //wait for threads to finish and join
         try {
@@ -171,12 +197,13 @@ public class FileSystem {
             crawlingThread2.join();
             crawlingThread3.join();
             crawlingThread4.join();
+            crawlingThread5.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         //all identified files so far put in shared list
-        System.out.println("All files in shared list: " + IdentifiedFilesSharedList);
+        System.out.println("All files in shared list: " + identifiedFilesSharedList);
     }
 
 }
