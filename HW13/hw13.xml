@@ -1,0 +1,39 @@
+<!-- To run this build script, type:
+      ant -f hw11.xml
+   on a shell.
+-->
+<project name="FileSystem - ThreadSafe Instance" basedir="." default="clean">
+    <property name="src" location="src" />
+    <property name="bin" location="bin" />
+
+    <path id="classpath">
+        <pathelement location="${bin}" />
+    </path>
+
+    <target name="init">
+        <mkdir dir="${bin}" />
+        <echo message="CLASSPATH: ${toString:classpath}" />
+    </target>
+
+    <target name="compile" depends="init">
+
+        <javac srcdir="${src}" destdir="${bin}" includeAntRuntime="no">
+            <classpath refid="classpath" />
+            <include name="edu/umb/cs681/hw13_1/*.java" />
+			<include name="edu/umb/cs681/hw13_2/*.java"/>
+        </javac>
+    </target>
+
+    <target name="run" depends="compile">
+        <java classname="edu.umb.cs681.hw13_1.MBTASchedule" classpathref="classpath" fork="true" />
+        <java classname="edu.umb.cs681.hw13_2.MBTAScheduleSafe" classpathref="classpath" fork="true" />
+    </target>
+
+    <target name="clean" depends="run">
+        <delete includeemptydirs="true">
+            <fileset dir="${bin}/edu/umb/cs681/hw13_1" includes="**/*" />
+            <fileset dir="${bin}/edu/umb/cs681/hw13_2" includes="**/*" /> 
+        </delete>
+    </target>
+
+</project>
