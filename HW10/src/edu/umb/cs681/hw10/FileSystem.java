@@ -8,7 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class FileSystem {
 
     private LinkedList<Directory> rootDirs;
-    private static AtomicReference<FileSystem> instance = null; //using AtomicReference to implement singleton class.
+    private static AtomicReference<FileSystem> instance = new AtomicReference<FileSystem>(new FileSystem()); //using AtomicReference to implement singleton class.
     private static AtomicBoolean done = new AtomicBoolean(false); //implementing AtomicBoolean flag to terminated 10+ threads.
     private static ReentrantLock lock = new ReentrantLock();
 
@@ -18,15 +18,10 @@ public class FileSystem {
 
     //introduced lock/unlock in try-finally block to prevent race conditions.
     private static AtomicReference<FileSystem> getFileSystem() {
-        lock.lock();
-        try {
-            if (instance == null) {
-                instance = new AtomicReference<FileSystem>(new FileSystem()); //instance created if instance = null
-            }
-            return instance;
-        } finally {
-            lock.unlock();
+        if (instance == null) {
+            instance = new AtomicReference<FileSystem>(new FileSystem()); //instance created if instance = null
         }
+        return instance;
     }
 
     public LinkedList<Directory> getRootDirs() {
@@ -52,6 +47,7 @@ public class FileSystem {
             AtomicReference<FileSystem> fs = FileSystem.getFileSystem(); //only one instance is created using AtomicReference
              while (!done.get()) { // 2 steps, thread-safe
                 System.out.println("Only one instance in use: " + fs.get());
+                break;
             }
         };
 
@@ -61,11 +57,10 @@ public class FileSystem {
             thread[i].start();
         }
 
-
         done.set(true); // 2 steps, thread-safe
 
         for (Thread threads : thread) {
-            threads.join();
+            threads.interrupt();
         }
 
     }

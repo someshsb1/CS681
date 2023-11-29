@@ -5,8 +5,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Link extends FSElement {
 
-    FSElement target;
-
     public Link(Directory parent, String name, int size, LocalDateTime creationTime, FSElement target, ReentrantLock lock) {
         super(parent, name, size, creationTime, target, lock);
         this.target = target;
@@ -22,20 +20,10 @@ public class Link extends FSElement {
     }
 
     public FSElement getTarget() {
-        lock.lock();
-        try {
-            return target;
-        } finally {
-                lock.unlock();
-        }
+        return target;
     }
 
     public boolean isLink() {
-        lock.lock();
-        try {
-            return true;
-        } finally {
-                lock.unlock();
-        }
+        return true;
     }
 }

@@ -9,8 +9,8 @@ public class FSElement {
     protected String name;
     protected int size;
     protected LocalDateTime creationTime;
-    private Directory parent;
-    FSElement target;
+    protected Directory parent;
+    protected FSElement target;
 
     public FSElement(Directory parent, String name, int size, LocalDateTime creationTime, FSElement target, ReentrantLock lock) {
         this.parent = parent;
@@ -84,21 +84,11 @@ public class FSElement {
     }
 
     public boolean isDirectory() {
-        lock.lock();
-        try {
-            return false;
-        } finally {
-            lock.unlock();
-        }
+        return false; //read-only method, doesn't require thread-sync
     }
 
     public boolean isFile() {
-        lock.lock();
-        try {
-            return false;
-        } finally {
-                lock.unlock();
-        }
+        return false; //read-only method, doesn't require thread-sync
     }
 
     public static void main(String args[]) {

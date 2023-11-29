@@ -106,13 +106,8 @@ public class MBTAScheduleSafe {
 
         train.setDone(); //using 2 step thread termination to avoid race conditions.
 
-        //waiting for the threads to finish and join
-        try {
-            t1.join();
-            t2.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        t1.interrupt();
+        t2.interrupt();
 
         train.displaySchedules("Red"); /* calling the displaySchedule method to print the arrival time of train.
                                                 even though multiple threads are calling the train schedular, the

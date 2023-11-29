@@ -6,9 +6,19 @@ import java.util.concurrent.locks.ReentrantLock;
 public class RunnableCancellableInterruptiblePrimeFactorizer extends RunnableCancellablePrimeFactorizer{
 
     private static ReentrantLock lock = new ReentrantLock();
+    private boolean done = false;
 
     public RunnableCancellableInterruptiblePrimeFactorizer(long dividend, long from, long to) {
         super(dividend, from, to);
+    }
+
+    public void setDone() {
+        lock.lock();
+        try {
+            done=true;
+        } finally {
+            lock.unlock();
+        }
     }
 
     public void generatePrimeFactors() {
@@ -16,9 +26,8 @@ public class RunnableCancellableInterruptiblePrimeFactorizer extends RunnableCan
         while (dividend != 1 && divisor <= to) {
             lock.lock(); //introducing lock/unlock mechanism to prevent race conditions
             try {
-                if (Thread.interrupted()) {
+                if (done) {
                     System.out.println("Stopped generating prime factors.");
-
                     break;
                 }
                 if (divisor > 2 && isEven(divisor)) {
@@ -37,8 +46,8 @@ public class RunnableCancellableInterruptiblePrimeFactorizer extends RunnableCan
             } finally {
                 lock.unlock();
             }
-            try { //2-step thread termination
-                Thread.sleep(3000);
+            try { 
+                Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 continue;
             }
@@ -55,12 +64,12 @@ public class RunnableCancellableInterruptiblePrimeFactorizer extends RunnableCan
         Thread thread = new Thread(gen);
         thread.start(); //thread begins processing
 
-        try { //introduced delay before
-            Thread.sleep(200);
+        try { //introduced delay
+            Thread.sleep(1000);
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
-
+        gen.setDone();
         //2-Step thread termination
         thread.interrupt();
 
