@@ -6,10 +6,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Directory extends FSElement{
     
-    private static ReentrantLock lock = new ReentrantLock();
     private LinkedList<FSElement> childrens;
-    public Directory(Directory parent, String name, int size, LocalDateTime creationTime, FSElement target) {
-        super(parent, name, size, creationTime, target);
+
+    public Directory(Directory parent, String name, int size, LocalDateTime creationTime, FSElement target, ReentrantLock lock) {
+        super(parent, name, size, creationTime, target, lock);
         this.childrens = new LinkedList<FSElement>();
     }
 
@@ -25,53 +25,69 @@ public class Directory extends FSElement{
         }
     }
 
-    public Directory getParent() {
-        return parent;
-    }
-    
     public LinkedList<FSElement> getChildren() {
+        lock.unlock(); 
+        try {
         return childrens;
+        } finally {
+            lock.unlock();
+        }
         
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void appendChild(FSElement child) {
+        lock.lock();
+        try {
         childrens.add(child);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public int countChildren() {
+        lock.unlock();
+        try {
         return childrens.size();
+        } finally {
+            lock.unlock();
+        }
     }
 
     public LinkedList<Directory> getSubDirectories() {
         LinkedList<Directory> subDirectories = new LinkedList<Directory>();
-        for (FSElement child : childrens) {
-            if (child.isDirectory()) {
-                subDirectories.add((Directory) child);
+        lock.lock();
+        try {
+            for (FSElement child : childrens) {
+                if (child.isDirectory()) {
+                    subDirectories.add((Directory) child);
+                }
             }
-        }
+        } finally {
+            lock.unlock();
+            }
         return subDirectories;
     }
 
+
     public LinkedList<File> getFiles() {
         LinkedList<File> files = new LinkedList<File>();
+        lock.lock();
+        try {
         for (FSElement child : childrens) {
             if(child.isFile()) {
                 files.add((File) child);
             }
         }
+    } finally {
+        lock.unlock();
+    }
         return files;
     }
 
     public int getTotalSize() {
         int size = 0;
+        lock.unlock();
+        try {
         for (FSElement child : childrens) {
             if(child.isDirectory()) {
                 size += ((Directory) child).getTotalSize();
@@ -79,23 +95,26 @@ public class Directory extends FSElement{
                 size += child.getSize();
             }
         }
+    } finally {
+        lock.unlock();
+    }
         return size;
     }
 
 
-    public boolean isDirectory() {
-        return true;
-    }
 
        //to capture the name of the subdirectories under the parent
        public Directory subDirectoryName(String name) {
+        lock.lock();
+        try {
         for (FSElement fs: childrens) {
             if (fs instanceof Directory && fs.getName().equals(name)) {
                 return (Directory) fs;
             }
         }
-        return null;
+        } finally {
+            lock.unlock();
+        }
+            return null;
+        }
     }
-    
-
-}

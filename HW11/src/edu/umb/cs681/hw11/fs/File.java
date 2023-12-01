@@ -5,11 +5,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 public class File extends FSElement {
-
-    private static ReentrantLock lock = new ReentrantLock();
     
-    public File(Directory parent, String name, int size, LocalDateTime creationTime, FSElement target) {
-        super(parent, name, size, creationTime, target);
+    public File(Directory parent, String name, int size, LocalDateTime creationTime, FSElement target, ReentrantLock lock) {
+        super(parent, name, size, creationTime, target, lock);
     }
     public void accept(FSVisitor v) {
         lock.lock();
