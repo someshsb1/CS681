@@ -7,7 +7,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public abstract class Observable<T> {
 	private LinkedList<Observer<T>> observers = new LinkedList<>();
 	private ReentrantLock lockObs = new ReentrantLock();
-	private LinkedList<Observer<T>> observersLocal = new LinkedList<>();
+	private LinkedList<Observer<T>> observersLocal;
 
 	
 	public void addObserver(Observer<T> o) {
@@ -46,17 +46,14 @@ public abstract class Observable<T> {
 	}
 
 	public void notifyObservers(T event) {
+		observersLocal = new LinkedList<>(); //initialised the new list outside lockObs
 		lockObs.lock();
 		try {
-		observers.forEach( (observer)->{observer.update(this, event);} );
-		for (Observer<T> observers : observersLocal) {
-		observersLocal.add(observers); //copy elements with locks held
-		}
+			observersLocal.addAll(observers); //copy elements with lockObs held
 		} finally {
 			lockObs.unlock();
 		}
-		observersLocal.forEach((observersLocal) -> {observersLocal.update(this, event);});
-		//Open Call
+		observersLocal.forEach( (observers)->{observers.update(this, event);} );
+		//Open Call update outside the lockObs
 	}
-	
 }
