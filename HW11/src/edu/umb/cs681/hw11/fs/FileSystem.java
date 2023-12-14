@@ -1,9 +1,7 @@
 package edu.umb.cs681.hw11.fs;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 import edu.umb.cs681.hw11.fs.util.*;
@@ -12,21 +10,22 @@ import edu.umb.cs681.hw11.fs.util.*;
 public class FileSystem {
 
     private LinkedList<Directory> rootDirs;
-    private static FileSystem ins = new FileSystem();
-    private List<File> sharedList;
+    private static FileSystem ins = null;
+    private LinkedList<File> sharedList;
     private static ReentrantLock lock = new ReentrantLock();
     private volatile boolean done = false;
 
 
     private FileSystem() {
         rootDirs = new LinkedList<Directory>();
-        sharedList = new ArrayList<>();
+        sharedList = new LinkedList<>();
     }
 
     public static FileSystem getFileSystem() {
         if (ins == null) {
             lock.lock();
             try {
+                if (ins == null)
                 ins = new FileSystem();
             } finally {
                 lock.unlock();
@@ -49,7 +48,7 @@ public class FileSystem {
         }
     }
 
-    public List<File> getSharedList() {
+    public LinkedList<File> getSharedList() {
         lock.lock(); //thread-synchronization preventing concurrency
         try {
             return sharedList;
@@ -65,7 +64,7 @@ public class FileSystem {
     public static void main(String args[]) {
 
         FileSystem fs = new FileSystem();
-        List<File> identifiedFilesSharedList = fs.getSharedList();
+        LinkedList<File> identifiedFilesSharedList = fs.getSharedList();
 
         //Drive 1
         Directory Applications = new Directory(null, "Applications", 0, LocalDateTime.now(), null, null);
@@ -207,7 +206,6 @@ public class FileSystem {
         crawlingThread3.interrupt();
         crawlingThread4.interrupt();
         crawlingThread5.interrupt();
-
 
         //all identified files so far put in shared list
         System.out.println("All files in shared list: " + identifiedFilesSharedList);
